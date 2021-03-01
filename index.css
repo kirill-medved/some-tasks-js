@@ -1,0 +1,19 @@
+table {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid black;
+  text-align: center;
+  background-color: #eee;
+}
+
+th {
+  height: 30px;
+}
+td {
+  padding: 0.3em 1em;
+}
+.true {
+  background-color: rgb(19, 190, 116);
+}
+.false {
+  background-color: #e35b52;
+}
