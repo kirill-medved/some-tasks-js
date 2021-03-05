@@ -158,3 +158,16 @@ const fillTable = (x, y) => {
 };
 
 fillTable(x, y);
+
+console.log('1' + 2);
+console.log(2 + '1');
+console.log(2 + 2 + '1');
+console.log(6 - '2');
+console.log('6' / '2');
+console.log(+true);
+console.log(+'');
+console.log(undefined + 1);
+console.log(null + 1);
+console.log('2' * '3');
+console.log(7 / 0);
+console.log(true + false);
