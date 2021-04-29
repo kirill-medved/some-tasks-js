@@ -1,8 +1,9 @@
-const game = document.querySelector('.game'),
-  res = document.querySelector('.res'),
-  btnGame = document.querySelector('.new-game'),
-  fields = document.querySelectorAll('.field'),
-  currentPlayer = document.getElementById('curPlyr');
+const game = document.querySelector('.game');
+const res = document.querySelector('.res');
+const btnGame = document.querySelector('.new-game');
+const fields = document.querySelectorAll('.field');
+const currentPlayer = document.getElementById('curPlyr');
+const MAX_STEP_COUNT = 9;
 
 const circle = `<svg class="circle">
 				<circle r="45" cx="58" cy="58" stroke="blue" stroke-width="10" fill="none" stroke-linecap="round" />
@@ -24,6 +25,7 @@ let stat = {
 function stepCross(target) {
   target.innerHTML = cross;
   target.classList.add('x');
+  target.classList.add('disable');
   count++;
   player = player == 'x' ? 'o' : 'x';
   currentPlayer.innerHTML = player.toUpperCase();
@@ -31,14 +33,18 @@ function stepCross(target) {
 function stepZero(target) {
   target.innerHTML = circle;
   target.classList.add('o');
+  target.classList.add('disable');
   count++;
   player = player == 'x' ? 'o' : 'x';
   currentPlayer.innerHTML = player.toUpperCase();
 }
 
 function init(e) {
-  if (!step) stepCross(e.target);
-  else stepZero(e.target);
+  if (e.currentTarget.classList.contains('disable')) {
+    return;
+  }
+  if (!step) stepCross(e.currentTarget);
+  else stepZero(e.currentTarget);
   step = !step;
   win();
 }
@@ -49,13 +55,13 @@ function newGame() {
   res.innerText = '';
   fields.forEach((item) => {
     item.innerHTML = '';
-    item.classList.remove('x', 'o', 'active');
+    item.classList.remove('x', 'o', 'active', 'disable');
+    item.addEventListener('click', init);
   });
-  game.addEventListener('click', init);
 }
 
 function win() {
-  let comb = [
+  const comb = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
@@ -81,7 +87,9 @@ function win() {
         updateStat();
       }, 1500);
 
-      game.removeEventListener('click', init);
+      fields.forEach((item) => {
+        item.removeEventListener('click', init);
+      });
       return;
     } else if (
       fields[comb[i][0]].classList.contains('o') &&
@@ -97,12 +105,17 @@ function win() {
         updateStat();
       }, 1500);
 
-      game.removeEventListener('click', init);
+      fields.forEach((item) => {
+        item.removeEventListener('click', init);
+      });
       return;
-    } else if (count === 9) {
+    } else if (count === MAX_STEP_COUNT) {
       res.innerText = 'Ничья';
       stat.d += 1;
-      game.removeEventListener('click', init);
+
+      fields.forEach((item) => {
+        item.removeEventListener('click', init);
+      });
       updateStat();
       return;
     }
@@ -116,4 +129,6 @@ function updateStat() {
 }
 
 btnGame.addEventListener('click', newGame);
-game.addEventListener('click', init);
+fields.forEach((item) => {
+  item.addEventListener('click', init);
+});
